@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A feature-rich, beautiful scientific and standard web calculator built with HTML, CSS, and vanilla JavaScript.">
+  <title>ApexCalc — Next-Gen Web Calculator</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="background-glow">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Main Calculator Card -->
+    <main class="calculator-card" id="calculator">
+      <!-- Top Control Bar -->
+      <header class="calc-header">
+        <div class="brand">
+          <span class="logo-icon">∑</span>
+          <span class="brand-title">ApexCalc</span>
+        </div>
+        <div class="header-actions">
+          <button id="degRadBtn" class="badge-btn" title="Toggle Degrees/Radians">DEG</button>
+          <button id="modeToggleBtn" class="pill-btn" title="Toggle Scientific Mode">
+            <span class="icon">fx</span>
+            <span class="btn-text">Scientific</span>
+          </button>
+          <button id="soundToggleBtn" class="icon-btn active" title="Toggle Sound Effects">
+            <svg class="icon-sound" viewBox="0 0 24 24" width="18" height="18">
+              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+          </button>
+          <button id="themeMenuBtn" class="icon-btn" title="Select Theme">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.21 19.58 10.56 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+            </svg>
+          </button>
+          <button id="historyToggleBtn" class="icon-btn" title="View History">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path fill="currentColor" d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 7 7 6.97 6.97 0 0 1-5-2.14l-1.42 1.42A8.95 8.95 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Theme Dropdown Popover -->
+      <div id="themeMenu" class="theme-dropdown hidden">
+        <div class="theme-option active" data-theme="dark">
+          <span class="theme-dot dark-dot"></span> Dark Neon
+        </div>
+        <div class="theme-option" data-theme="cyberpunk">
+          <span class="theme-dot cyberpunk-dot"></span> Cyberpunk
+        </div>
+        <div class="theme-option" data-theme="light">
+          <span class="theme-dot light-dot"></span> Prism Light
+        </div>
+        <div class="theme-option" data-theme="sunset">
+          <span class="theme-dot sunset-dot"></span> Sunset Gold
+        </div>
+      </div>
+
+      <!-- Display Section -->
+      <section class="display-container">
+        <div class="status-bar">
+          <span class="memory-badge hidden" id="memoryIndicator">M</span>
+          <span class="deg-rad-badge" id="degRadDisplay">DEG</span>
+        </div>
+        <div class="expression-display" id="expressionDisplay" title="Current Formula"></div>
+        <div class="result-display-wrapper">
+          <span class="result-display" id="resultDisplay">0</span>
+          <button class="copy-btn" id="copyBtn" title="Copy result to clipboard">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Memory Toolbar -->
+      <div class="memory-bar">
+        <button class="mem-btn" data-action="mc">MC</button>
+        <button class="mem-btn" data-action="mr">MR</button>
+        <button class="mem-btn" data-action="m-plus">M+</button>
+        <button class="mem-btn" data-action="m-minus">M-</button>
+        <button class="mem-btn" data-action="ms">MS</button>
+      </div>
+
+      <!-- Scientific Grid (Collapsible/Toggleable) -->
+      <div class="keypad-scientific hidden" id="scientificKeypad">
+        <button class="btn btn-sci" data-insert="sin(">sin</button>
+        <button class="btn btn-sci" data-insert="cos(">cos</button>
+        <button class="btn btn-sci" data-insert="tan(">tan</button>
+        <button class="btn btn-sci" data-insert="asin(">sin⁻¹</button>
+        <button class="btn btn-sci" data-insert="acos(">cos⁻¹</button>
+        <button class="btn btn-sci" data-insert="atan(">tan⁻¹</button>
+        
+        <button class="btn btn-sci" data-insert="log(">log</button>
+        <button class="btn btn-sci" data-insert="ln(">ln</button>
+        <button class="btn btn-sci" data-insert="√(">√</button>
+        <button class="btn btn-sci" data-insert="^">xʸ</button>
+        <button class="btn btn-sci" data-insert="^2">x²</button>
+        <button class="btn btn-sci" data-insert="!">n!</button>
+        
+        <button class="btn btn-sci" data-insert="π">π</button>
+        <button class="btn btn-sci" data-insert="e">e</button>
+        <button class="btn btn-sci" data-action="abs">|x|</button>
+        <button class="btn btn-sci" data-insert="(">(</button>
+        <button class="btn btn-sci" data-insert=")">)</button>
+        <button class="btn btn-sci" data-insert="10^">10ˣ</button>
+      </div>
+
+      <!-- Standard Keypad Grid -->
+      <div class="keypad-standard">
+        <button class="btn btn-func" data-action="clear-all">AC</button>
+        <button class="btn btn-func" data-action="backspace">⌫</button>
+        <button class="btn btn-func" data-insert="%">%</button>
+        <button class="btn btn-op" data-insert="/">÷</button>
+
+        <button class="btn btn-num" data-insert="7">7</button>
+        <button class="btn btn-num" data-insert="8">8</button>
+        <button class="btn btn-num" data-insert="9">9</button>
+        <button class="btn btn-op" data-insert="*">×</button>
+
+        <button class="btn btn-num" data-insert="4">4</button>
+        <button class="btn btn-num" data-insert="5">5</button>
+        <button class="btn btn-num" data-insert="6">6</button>
+        <button class="btn btn-op" data-insert="-">−</button>
+
+        <button class="btn btn-num" data-insert="1">1</button>
+        <button class="btn btn-num" data-insert="2">2</button>
+        <button class="btn btn-num" data-insert="3">3</button>
+        <button class="btn btn-op" data-insert="+">+</button>
+
+        <button class="btn btn-num" data-action="toggle-sign">±</button>
+        <button class="btn btn-num" data-insert="0">0</button>
+        <button class="btn btn-num" data-insert=".">.</button>
+        <button class="btn btn-equals" data-action="calculate">=</button>
+      </div>
+    </main>
+
+    <!-- History Side Drawer / Modal -->
+    <aside class="history-panel hidden" id="historyPanel">
+      <div class="history-header">
+        <h3>Calculation History</h3>
+        <button id="closeHistoryBtn" class="icon-btn-sm" title="Close Panel">✕</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="empty-history">No history recorded yet</div>
+      </div>
+      <div class="history-footer">
+        <button id="clearHistoryBtn" class="danger-btn">Clear History</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">Copied to clipboard!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
